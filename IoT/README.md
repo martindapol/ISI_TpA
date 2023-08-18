@@ -289,17 +289,23 @@ Un ordenador convencional dispone de varios puertos de serie. Los más conocidos
 En ocasiones se refiere a los puertos serie como UART. La **UART** (universally asynchronous receiver/transmitter) es una unidad que incorporan ciertos procesadores, encargada de realizar la conversión de los datos a una secuencia de bits y transmitirlos o recibirlos a una velocidad determinada.
 
 
-## Ejercitación
+### Ejercitación
 
-> Caso práctico 02:
->* Desarrollar un sketch que permita encender/apagar un LED utilizando un pulsador. Al mismo tiempo permita activar/desactivar un Relay para simular el paso de corriente hacia cualquier dispositivo externo que se pretenda controlar. Se deja a modo de ejemplo un sketch que permite encender/apagar un Relay cada un segundo, y mostrar en una pantalla su estado [Solo relay](./skectchs/Solo%20Relay/).
->
->* Agregar al sketch la posibilidad de mostrar mediante una pantalla LCD (16x2) que muestre el estado del LED (cadenas: ENCENDIDO!/APAGADO! respectivamente)
+> **Caso práctico 02**: desarrollar un sketch que permita encender/apagar un juego de LEDs (uno azul y otro verde) utilizando para ello el puerto serie. La idea es utilizar los dos leds que ya vienen provistos en la placa UTN (uno verde más el led propio de la Esp32) y procesar las siguientes entradas por puerto serie:
+> - **v** o **V** para encender el LED verde y apagar el azul
+> - **a** o **A** para encender el LED azul y apagar el verde
+> 
 Para ver el código de la solución acceder a esta carpeta: [Práctico 02](./skectchs/Practico%2002/)
 
+> **Caso práctico 03**: desarrollar un sketch que permita >procesar un comando (en formato texto) recibido por el puerto >serie tal que:
+> "LUZ_ON": encienda el LED y active un relay (que podría estar > conectado con el sistema de ilumninación de una habitación).
+> "LUZ_OFF": con apague el LED y desactive el relay.
 
-## Anexo
+Para ver el código de la solución acceder a esta carpeta: [Práctico 03](./skectchs/Practico%2003/)
 
-### Comunicación I2C
+
+
+
+## Comunicación I2C
 
 Para cumplimentar los requerimientos del ejercicio 02 es necesario conectar un LCD mediante adaptador I2C a la placa Esp32. Para ello es necesario conocer qué es y comó funciona este protocolo, tal como se muestra en el video de este link: [I2C explicado](https://www.youtube.com/watch?v=kuLgPLrg-cY).

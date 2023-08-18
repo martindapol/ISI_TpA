@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "author": "Martin Polliotto",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": -10, "left": -79.34, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 18.92,
+      "left": 112.59,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 137.55,
+      "left": 60.41,
+      "attrs": { "value": "220" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "led1:A", "esp:D23", "red", [ "h-42.43", "v-49.19", "h-73.2" ] ],
+    [ "led1:C", "r2:2", "black", [ "v0" ] ],
+    [ "r2:1", "esp:GND.1", "black", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
