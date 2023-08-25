@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "author": "Martin Polliotto",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": -32, "left": -163.34, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 18.92,
+      "left": 112.59,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 137.55,
+      "left": 60.41,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "board-ssd1306",
+      "id": "oled1",
+      "top": -131.26,
+      "left": -306.97,
+      "attrs": { "i2cAddress": "0x3c" }
+    },
+    { "type": "wokwi-dht22", "id": "dht1", "top": 46.03, "left": -341.4, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "led1:A", "esp:D23", "red", [ "h-42.43", "v-49.19", "h-73.2" ] ],
+    [ "led1:C", "r2:2", "black", [ "v0" ] ],
+    [ "r2:1", "esp:GND.1", "black", [ "v0" ] ],
+    [ "esp:D22", "oled1:SCL", "magenta", [ "h17.21", "v-149.6", "h-209.08", "v0.8" ] ],
+    [ "esp:D21", "oled1:SDA", "blue", [ "h26.54", "v-197.83", "h-288.41", "v20.13" ] ],
+    [ "esp:3V3", "oled1:VCC", "#8f4814", [ "v-283.43", "h-281.31" ] ],
+    [ "esp:GND.2", "oled1:GND", "black", [ "h0" ] ],
+    [ "dht1:GND", "esp:GND.2", "black", [ "v0.14", "h139.26" ] ],
+    [ "dht1:VCC", "esp:3V3", "red", [ "v8.8", "h262.36" ] ],
+    [ "esp:D33", "dht1:SDA", "yellow", [ "v136.03", "h-158.56" ] ]
+  ],
+  "dependencies": {}
+}
