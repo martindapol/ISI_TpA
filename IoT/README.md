@@ -474,11 +474,11 @@ Para ver el código de la solución acceder a esta carpeta: [Práctico 05](./ske
 
 Para ver el código de la solución acceder a esta carpeta: [Práctico 06](./skectchs/Practico%2006/)
 
-> **Caso práctico 07**: desarrollar un sketch que permita mostrar por puerto serie los pasos decrecientes (en sentido horario) o decrecientes (en sentido contrario) leidos desde el encoder. En caso de presionar el botón se deberá encender/apagar la luz led respectivamente.
+> **Caso práctico 07**: desarrollar un sketch que permita mostrar por el diplay los pasos decrecientes (en sentido horario) o decrecientes (en sentido contrario) leidos desde el encoder. En caso de presionar el botón se deberá encender/apagar la luz led respectivamente.
 Se deberán mostrar los datos:
 - Pasos
-- Sentido de giro: HORARIO/ANTI-HORARIO
+- Sentido de giro: RELOJ/NO-RELOJ
 - Estado LED: ON/OFF
 
-Para ver el código de la solución acceder a esta carpeta: [Práctico 07]()
+Para ver el código de la solución acceder a esta carpeta: [Práctico 07](./skectchs/Practico%2007/)
 
