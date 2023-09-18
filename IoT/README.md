@@ -739,8 +739,6 @@ El código del proyecto se encuentra en [Práctico 12](./sketchs/Practico%2011/)
 IoT Arduino Cloud es una plataforma en la nube que permite, al igual que ThingSpeak, conectar y gestionar dispositivos Arduino de forma remota. Puedes crear proyectos de IoT, controlar sensores y actuadores, y visualizar los datos en un panel de control en línea. 
 La solución no es gratuita pero creando una cuenta a partir de un correo personal es posible acceder a una gratuita con las limitaciones propias de toda versión free. Actualmente soporta una gran familia de controladores Arduino, incluida la placa Esp32.
 
-### Características
-
 ### Paso a Paso con Arduino Cloud
 
 #### Paso 1: Registro y Acceso
