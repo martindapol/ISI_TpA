@@ -251,7 +251,7 @@ Finalizado el conexionado de la placa, se escribe el código que será instalado
 
 Desde la opción **Guardar** es posible descargar tanto el código en formato .ino como el archivo de diagrama en formato .json con la configuración de los dispostivos y la placa.
 
-Para ver el código de la solución acceder a esta carpeta: [Práctico 01](./skectchs/Practico%2001/)
+Para ver el código de la solución acceder a esta carpeta: [Práctico 01](./sketchs/Practico%2001/)
 
 # Programación en Arduino
 ## Lenguaje C/C++
@@ -408,13 +408,13 @@ En ocasiones se refiere a los puertos serie como UART. La **UART** (universally 
 > - **v** o **V** para encender el LED verde y apagar el azul
 > - **a** o **A** para encender el LED azul y apagar el verde
 > 
-Para ver el código de la solución acceder a esta carpeta: [Práctico 02](./skectchs/Practico%2002/)
+Para ver el código de la solución acceder a esta carpeta: [Práctico 02](./sketchs/Practico%2002/)
 
 > **Caso práctico 03**: desarrollar un sketch que permita >procesar un comando (en formato texto) recibido por el puerto >serie tal que:
 > "LUZ_ON": encienda el LED y active un relay (que podría estar > conectado con el sistema de ilumninación de una habitación).
 > "LUZ_OFF": con apague el LED y desactive el relay.
 
-Para ver el código de la solución acceder a esta carpeta: [Práctico 03](./skectchs/Practico%2003/)
+Para ver el código de la solución acceder a esta carpeta: [Práctico 03](./sketchs/Practico%2003/)
 
 ### Comunicación I2C
 
@@ -439,7 +439,7 @@ Para conocer qué es y comó funciona en detalle este protocolo, tal como se mue
 >
 >**Nota**: para poder utilizar este módulo es necesario importar la librería **Adafriut SH110X**.
 
-Para ver el código de la solución acceder a esta carpeta: [Práctico 04](./skectchs/Practico%2004/)
+Para ver el código de la solución acceder a esta carpeta: [Práctico 04](./sketchs/Practico%2004/)
 
 ### Comunicación SPI:
 El bus **SPI** (del inglés Serial Peripheral Interface) es un estándar de comunicaciones, usado principalmente para la transferencia de información entre circuitos integrados en equipos electrónicos.  Es un estándar para controlar casi cualquier dispositivo electrónico digital que acepte un flujo de bits serie regulado por un 
@@ -468,11 +468,11 @@ Por su parte el potenciómetro está integrado como entrada analógica en el **p
 
 > **Caso práctico 05**: desarrollar un sketch para regular la intensidad del LED verde utilizando como entrada los valores obtenidos del potenciómetro (o divisor de voltaje). Los valores deberán ser visualizados en el módulo OLED utilizado en la práctica anterior, indicando valor de lectura y voltage resultante (valor comprendido entre[0;3.3]v) que será enviado como salida al led.
 
-Para ver el código de la solución acceder a esta carpeta: [Práctico 05](./skectchs/Practico%2005/)
+Para ver el código de la solución acceder a esta carpeta: [Práctico 05](./sketchs/Practico%2005/)
 
 > **Caso práctico 06**: desarrollar un sketch que permita leer los valores de Humedad y Temperatura relativas mediante el sensor DTH22 integrado. En todo momento los valores deben ser visualizados en el módulo OLED. En caso de los valores de temperatura leídos por el sensor superen los 20 °C, se deberá encender el led verde, cuando no llegue a ese valor de lectura deberá apagarse automáticamente.
 
-Para ver el código de la solución acceder a esta carpeta: [Práctico 06](./skectchs/Practico%2006/)
+Para ver el código de la solución acceder a esta carpeta: [Práctico 06](./sketchs/Practico%2006/)
 
 > **Caso práctico 07**: desarrollar un sketch que permita mostrar por el diplay los pasos decrecientes (en sentido horario) o decrecientes (en sentido contrario) leidos desde el encoder. En caso de presionar el botón se deberá encender/apagar la luz led respectivamente.
 Se deberán mostrar los datos:
@@ -480,5 +480,321 @@ Se deberán mostrar los datos:
 - Sentido de giro: RELOJ/NO-RELOJ
 - Estado LED: ON/OFF
 
-Para ver el código de la solución acceder a esta carpeta: [Práctico 07](./skectchs/Practico%2007/)
+Para ver el código de la solución acceder a esta carpeta: [Práctico 07](./sketchs/Practico%2007/)
 
+# Conexión a Internet
+![internet](internet.png)
+
+## Conexión Wifi
+### Introducción
+
+Es muy normal el poseer dispositivos que pueden conectarse a Internet, como lo es un teléfono móvil, una laptop, una televisión, etc. Hay muchos casos en los cuales, se necesita hacer el envío de información hacia alguna plataforma alojada en la Nube. Lo necesario para realizar esto es conectarse a **Internet**. 
+
+En esta sección se realizará la conexión de la tarjeta ESP32 hacia una red WiFi aprovechando que nativamente el chip cuenta con conectividad WiFi. Esta última es compatible con 802.11 b/g/n en la banda de los 2.4GHz, alcanzando velocidades de hasta 150 Mbits/s. También incluye comunicación Bluetooth compatible con Bluetooth v4.2 y Bluetooth Low Energy (BLE) que serán mencionados a posterior.
+
+### Configurar una conexión Wifi
+
+Para conectar la tarjeta Esp32 a una red inalámbrica es necesario conocer como mínimo los siguientes datos:
+- **SSID**: es el nombre público que identifica una red local inalámbrica, es decir, una WLAN. Son las siglas de Service Set Identifier.
+- **PASSWORD**: Clave de seguridad de la red.
+
+Estos datos pasan a ser constantes del sketch cuyos valores dependerán de la red a la que se conecta la placa. A continuación se muestra el código necesario:
+>
+>``` c++
+>#include <WiFi.h>
+>
+>const char* SSID = "UNA_RED";
+>const char* PASS = "UN_PASS";
+>
+>void setup() {
+>    Serial.begin(9600);
+>    Serial.println("");
+>    WiFi.begin(SSID, PASS);
+>    while (WiFi.status() != WL_CONNECTED) {
+>        delay(500);
+>        Serial.print(".");
+>    }
+>    Serial.println("");
+>    Serial.println("WiFi conectado");
+>    Serial.println(WiFi.localIP());
+>    server.begin();  // iniciamos el servidor
+>}
+>```
+
+El funcionamiento del código anterior se explica a continuación:
+
+Como primer paso, se debe llamar a la librería WiFi.h, que se encuentra instalada en el IDE de Arduino por defecto (No es necesario instalar).
+
+>``` c++
+>#include <WiFi.h>
+>```
+Ahora, se definen como char constante el nombre y la contraseña de la red WiFi a la cual se realiza la conexión.
+
+>```c++
+>const char* SSID = "UNA_RED";
+>const char* PASS = "UN_PASS";
+>```
+
+Se define en la función **setup()** el inicio del terminal Serial a una velocidad de baudios determinada, y se inicia la conexión WiFi con el comando **WiFi.begin()**, añadiendo los nombres de las variables mencionadas (SSID y PASS). Adicionalmente se añade un retardo de 2 segundos.
+
+>```c++
+>void setup() {
+>  /*Iniciamos el terminal Serial para la escritura de >algunos parámetros */
+>  Serial.begin(9600);
+>  /*Iniciamos la conexión a la red WiFi definida*/
+>  WiFi.begin(SSID, PASS);
+>  delay(2000);
+>```
+
+Se añade un ciclo While que tiene como función imprimir puntos (“.”) mientras se realice la conexión con la red WiFi. Una vez conectado, dejarán de aparecer esos caracteres.
+
+>```c++
+>  Serial.print("Se está conectando a la red WiFi denominada ");
+>  Serial.println(ssid);
+>  while (WiFi.status() != WL_CONNECTED) {
+>        delay(500);
+>        Serial.print(".");
+>    }
+>```    
+Cuando la conexión se haya realizado, se imprimirá en el monitor Serial “WiFi Connected”, junto a la dirección IP que se le asignó al ESP32. Cabe mencionar que no se contempla el uso de Loop () debido a que, la conexión se realiza una única vez, por lo que no es necesario realizar un bucle infinito de conexiones.
+
+>``` c++    
+>Serial.println("");
+>Serial.println("WiFi connected");
+>Serial.println("IP address: ");
+>Serial.println(WiFi.localIP());
+>```    
+
+## Servidor Web con Esp32
+
+### Introducción
+
+Un servidor web con ESP32, ¿es posible alojar un servidor Web en la tarjeta?, ¿para qué?. La respuesta es sencilla: para poder acceder de manera remota a la placa mediante el protocolo de comunicación HTTP sin necesidad de tener hardware especializado. Esto permite tener el control remoto de la Esp32 desde cualquier punto de la red desde el que se tenga acceso. Esto último implica dos cosas: 
+- tanto el cliente Web como el esp32 estan en la misma red (se accede directo por IP local asignada a la placa)
+- la tarjeta tiene asignada una IP fija y el cliente accede desde cualquier punto por Internet.
+Para más información consultar este [link](https://es.wikipedia.org/wiki/Direcci%C3%B3n_IP).
+
+
+### ¿Cómo funciona un Servidor Web? 
+
+Un servidor Web es un proceso dedicado capaz de responder  mensajes mediante el protocolo HTTP enviados desde un cliente. Típicamente los clientes Web más usados son los navegadores Web como Google Chrome, Firefox, etc.
+
+Comunmente cuando se escribe la **URL** (cadena que identifica unívocamente a un recurso del servidor) desde un navegador lo que este hace es enviar una solicitud HTTP al servidor WEB (mediante un método específico del protocolo llamado **GET**). El trabajo se traslada al servidor WEB que debe de poder procesar esa solicitud.
+
+Por ejemplo, si se escribe una URL como **http://192.168.1.125/ledon** en el navegador de un PC o móvil,  el navegador envía una solicitud HTTP al ESP32 (identificado como un nodo más de la red) para que procese esta solicitud, encendia un LED y devuelva como respuesta una página web (contenido HTML) al navegador mostrándole el estado del LED: ON.
+
+### Modos de funcionamiento
+
+El ESP32 con la librería Wifi.h nos posibilita trabajar de varias maneras diferentes. No solo la típica conexión al AP (punto de acceso) de tu router (como cualquier PC o móvil), sino que también permite una conexión directa entre ESP32 y los clientes sin pasar por el router, ni por su punto de acceso Wifi.
+
+- **Modo Estación (STA)**: su comportamiento que como cualquier otro dispuesto en vuestra casa, móvil, PC o tablet.
+- **Modo de Punto de acceso (AP)**: en este modo de operar, el ESP32 crea su propia red Wifi, permitiendo conexiones máquina a máquina, estableciendo una comunicación directa entre dos o más estaciones (PC, móvil, Tablets) sin un punto de acceso que enrute el tráfico.
+- Existe un tercer modo que es un modo mixto, es decir, es un híbrido que se comporta de los dos modos anteriores.
+
+Cualquiera de estos modos de operar son posibles con ESP32, la diferencia radica en decidir como se quiere que se comporte el ESP32. 
+
+### Primer servidor Web
+
+Para un primer ejemplo se creará un servidor web independiente con un ESP32 que controla las salidas (dos LED) mediante el entorno de programación Arduino IDE. El servidor web responde a dispositivos móviles y se puede acceder a él con cualquier dispositivo que funcione como navegador en la red local. Se mostrará cómo crear el servidor web y cómo funciona el código paso a paso.
+
+#### Circuito del proyecto
+
+Se conectan dos LED al ESP32 como se muestra en el siguiente diagrama esquemático: un LED conectado a **GPIO 26**, y el otro para **GPIO 27**.
+
+![picture 1](esp32_web_server_schematic.webp) 
+
+#### Código en Arduino IDE
+
+El código de este primer servidor esta [Práctico 08](./sketchs/Practico%2008/).
+
+Para que el código anterior funcione es necesario obtener el SSID y clave de la red local a la se va a conectar tanto el Esp32 como el movil o pc desde donde se quiera hacer la prueba. Luego de definir dichos valores como constantes en el sketch es necesario subir el código a la placa y obtener desde el Monitor Serial la dirección IP asignada a la tarjeta (tal como se muestra a modo de ejemplo en la siguiente imagen).
+
+![picture 2](ESP-IP-address-1.webp) 
+
+
+### Consideraciones de funcionamiento:
+> 
+> Una vez definidos los valores de las constantes SSID y PASS >lo siguiente es crear un servidor en un puerto determinado por >ejemplo puerto 80 mediante la línea:
+
+``` c++
+WiFiServer server(80);
+```
+
+> Luego se programa qué hacer cuando un nuevo cliente establece una conexión con el servidor web, tal como se muestra en la línea:
+
+``` c++
+WiFiClient client = server.available();
+if(client){
+    //....
+}
+```
+> El loop seguirá ejecutandose validando que la variable **client** no sea nula, en tal caso entiende que tiene un nuevo cliente que atender y comienza un nuevo ciclo mientras el cliente se encuentre conectado.
+
+> Lo que sigue a continuación es el procesamiento típico de una solicitud HTTP: se lee byte a byte el header o cabecera de la solicitud hasta que se encuentra con un salto de línea o '\n'.En el header se encontrará tícamente con el método HTTP utilizado por el cliente (GET/POST) seguido de la URL que identifica el recurso solicitado. Con esta información es posible definir las acciones a tomar en función del estado de la placa.
+
+> Por último se crea una cadena con el código HTML que será enviado al cliente como respuesta HTTP. Notar que el código incluye una sentencia break para salir del ciclo while() utilizado para el procesamiento de la petición.
+
+
+## Ejercitación
+
+> Caso práctico 09:
+> * Tomando el skectch del caso práctico 03, refactorizar su código para crear un servidor Web que permita encender el relay de manera remota utilizando la conexión WIFI a la red local, y dejar sin efecto el encendio mediante los comandos recibidos por el puerto serie. Para ver el código de la solución acceder a esta carpeta: [Práctico 09](sketchs/Practico%2003/)
+
+> Caso práctico 10:
+> * Tomando el skectch del caso anterior, refactorizar su código para procesar mensajes recibidos desde un bot de Telegram. Deberá investigar cómo crear un bot y mediante su TOKEN ACCESS gestionar las comunicaciones con la placa de desarrollo. Librería sugerida: UniversalTelegramBot.
+Para ver el código de la solución acceder a esta carpeta: [Práctico 10](./sketchs/Practico%2010/)
+
+
+# Plataformas IoT 
+
+### Introducción
+Una plataforma de IoT es una parte integral de cualquier servicio basado en el Internet de las Cosas. Puede ayudarte a acelerar el tiempo de comercialización, minimizar el riesgo, reducir el costo de desarrollo y ayudarte a llegar más rápido al mercado de los productos.
+
+### ¿Qué es una plataforma de IoT?
+Una plataforma de Internet de las cosas es un grupo de tecnologías que proporcionan los bloques de construcción para desarrollar un producto IoT. Las plataformas de IoT proveen la "infraestructura" que se usa para crear las características específicas de una solución.
+
+Al asumir la funcionalidad no diferenciada, las plataformas de IoT ayudan a reducir el riesgo y el costo de desarrollo y a acelerar el tiempo de comercialización de un producto.
+
+Cuando se habla de plataformas IoT, a menudo se lanza a la jerga técnica como protocolos de transporte, motores de reglas, repositorios de datos, etc. Si bien esas consideraciones son importantes y merecen una planificación cuidadosa, no ilustran claramente cómo una plataforma de IoT puede ayudar en el desarrollo de un producto IoT.
+
+### Funcionalidades clave
+
+Las tareas clave de una plataforma IoT son:
+
+- Adquirir datos del mundo real a través de sensores
+- Analizar los datos localmente (edge computing)
+- Conectarse a la nube para transmitir datos y recibir órdenes
+- Almacenar los datos en la nube
+- Analizar los datos en la nube para crear una visión
+- Ordenar a las "cosas" que realicen tareas específicas basadas en la comprensión
+- Presentar las ideas a los usuarios
+ 
+ Adicionalmente debería proporcionar servicios para:
+
+- Realizar todas las operaciones de forma segura a través de la pila de tecnología IoT
+- Identificar y gestionar todos sus dispositivos de IoT a escala
+
+## Plataforma Cloud IOT
+Esta categoría de plataformas IoT proporciona los elementos básicos para su producto, incluyendo el consumo, el transporte, el almacenamiento, el análisis y la visualización de datos. Como su nombre lo indica, su objetivo es permitir el rápido desarrollo de su aplicación abstrayendo las complejidades de la construcción de una solución IoT.
+
+Hay cientos de plataformas de Internet de las cosas en el mercado, por lo que puede ser desalentador averiguar cuál de ellas utilizar. Las plataformas de habilitación de aplicaciones incluyen:
+
+- Plataformas industriales
+- Plataformas de consumo
+- Plataformas dirigidas a los desarrolladores
+- Plataformas de alto nivel (arrastrar y soltar), buenas para la - creación de prototipos o MVPs
+- Plataformas que se centran en verticales específicas
+- Plataformas en el lugar vs. Edge vs. Cloud
+
+Algunos de los principales actores en el espacio de las plataformas cloud IoT incluyen:
+
+- Microsoft Azure IoT
+- AWS IoT
+- Google Cloud IoT Core
+- ThingSpeak
+- Arduino IoT Cloud
+
+### ThingSpeak
+
+ThingSpeak es una plataforma abierta de aplicaciones, diseñada para permitir conectar personas con objetos. Se caracteriza por ser una plataforma Open Source  con una API para almacenar y recuperar datos de los objetos usando el protocolo HTTP sobre Internet o vía LAN (Local Area Network).
+
+Se trata de una plataforma basada en Ruby on Rails 3.0 (RoR), este es un framework de aplicaciones web  de código abierto basado en Ruby, cuya arquitectura está basada en el Modelo Vista Controlador (MVC). Se caracteriza por su simplicidad a la hora de programar aplicaciones del mundo real, escribiendo menos código y con una configuración mucho más sencilla que otros frameworks. Otra de las características que hacen de RoR un framework perfecto para el desarrollo de aplicaciones es que permite el uso de meta programación, haciendo que su sintaxis sea más legible y llegue a un gran número de usuarios.
+
+#### Características principales
+Algunas características importantes de esta plataforma son:
+- Dispone de una **API** de programación abierta. Un punto importante a la hora de desarrollar cualquier proyecto es encontrar un API disponible de forma sencilla para que el desarrollador tenga los mecanismos necesarios para el desarrollo de la aplicación. En este caso, ThigSpeak dispone de una API la cual está disponible en GitHub para su descarga en un servidor propio. Es totalmente abierta, por lo que también se puede modificar su código fuente original y así contribuir a la comunidad con nuevas características, un principio básico en toda
+plataforma Open Source.
+
+- **Plugins**: para extender la funcionalidad del sitio también se nos brinda la oportunidad de desarrollar plugins. Estos nos ofrecen la posibilidad de crear aplicaciones de forma nativa en nuestra plataforma ThigSpeak.  Soporta HTML, CSS y JavaScript como lenguajes de programación. Al igual que los canales los plugins pueden ser público o privados según sean nuestras necesidades.
+- **Integración**: Uno de los puntos fuertes en cualquier plataforma IoT, es que permita una amplia integración con diversos dispositivos Hardware y software. En este caso ThingSpeak permite la integración de su plataforma con: Arduino/ Raspberry Pi/Móbiles/Aplicaciones web/Redes Sociales o Análisis de datos con MATLAB 
+
+- Otra característica es que dispone de un conjunto de apps para conectar con redes sociales, soportar comunicación con Web Services, calendarizar tareas o incluso definir reglas que disparen acciones ante ciertos valores de datos recibidos en un canal.
+
+#### Chanels
+
+Los canales almacenan todos los datos que recopila una aplicación ThingSpeak. Cada canal incluye ocho campos que pueden contener cualquier tipo de datos, más tres campos para datos de ubicación y uno para datos de estado. Una vez que recopila datos en un canal, se utilizan las aplicaciones de ThingSpeak para analizarlos y visualizarlos.
+
+Para crear canales es necesario contar primero con una cuenta en la plataforma. Una vez creado el usuario a partir de una mail validado, es posible crear canales para los proyectos.
+
+
+#### Proyecto de aplicación
+
+Para un primer proyecto de aplicación se propone generar un conjunto de valores aleatorios (con valores comprendidos entre 1 y 100) desde la placa Esp32 que podemos pensar en datos recolectados de un **sensor X** con un propósito específico y enviarlos a la plataforma para su visualización en tiempo real sobre un dashboard que grafique los valores enviados desde la placa.
+
+Lo primero es crear un canal llamado **Random IoT Values** con un solo campo llamado **sensor**. Una vez confirmados los datos del canal, de la pestaña de **API Key** copiar los valores de: Channel ID y Write API Key. Dichos valores serán utilizados en el sketch de Arduino IDE para inicializar la librería de la plataforma. 
+
+El código del proyecto se encuentra en [Práctico 11](./sketchs/Practico%2011/)
+
+
+## Ejercitación 
+
+Caso Práctico 12:
+Diseñar una estación meteorológica desarrollada a partir de una placa ESP32 y un sensor DHT22. La información recolectada por el sensor es enviada a un servidor de ThingSpeak mediante Wifi. 
+
+El código del proyecto se encuentra en [Práctico 12](./sketchs/Practico%2011/)
+
+
+## Plataforma Arduino Cloud
+
+IoT Arduino Cloud es una plataforma en la nube que permite, al igual que ThingSpeak, conectar y gestionar dispositivos Arduino de forma remota. Puedes crear proyectos de IoT, controlar sensores y actuadores, y visualizar los datos en un panel de control en línea. 
+La solución no es gratuita pero creando una cuenta a partir de un correo personal es posible acceder a una gratuita con las limitaciones propias de toda versión free. Actualmente soporta una gran familia de controladores Arduino, incluida la placa Esp32.
+
+### Características
+
+### Paso a Paso con Arduino Cloud
+
+#### Paso 1: Registro y Acceso
+
+Lo primero es ingresar al sitio web de [IoT Arduino Cloud](https://iot.arduino.cc) y crear una cuenta. Para ello solo es necesario ingresar los datos de un correo electrónico mediante el cual se confirma la creación de la cuenta. También es posible hacer un **sigin** mediante una cuenta asociada de Google.
+Luego se inicia sesión en la cuenta de IoT Arduino Cloud con las credenciales proporcionadas.
+
+#### Paso 2: Crear un Nuevo Dispositivo
+
+Después de iniciar sesión, se ingresa al panel de control y se selecciona la solapa **Dispositivos**. Tener presente que para la plataforma el término dispositivo hace referencia específicamente a los microntroladores.
+Mediante la opción "ADD" se permite configurar un nuevo dispositivo. Tener en cuenta que la placa Esp32 corresponde a un dispositvo de tercero por lo que deberá seleccionar la opción **Third party device**. Se debe asignar un nombre único al dispositivo y seleccionar el modelo específico de placa (La placa UTN corresponde con la opción **ESP32 Dev Module**).
+Lo más importante de este paso es recordar el ID y la clave de autenticación que se genera. Éstas credenciales se utilizarán para conectar desde el dispositivo físico a la plataforma IoT. Siempre se aconseja descargar estos valores del documento pdf que genera automáticamente.
+
+
+**Paso 3: Arduino IDE para IoT Arduino Cloud**
+
+> Desde Arduino IDE (local)
+
+Se debe instalar la biblioteca Arduino IoT Cloud siguiendo estos pasos:
+a. Desde  "Herramientas" > "Gestor de tarjetas".
+b. Buscar "Arduino IoT Cloud" y seleccionar la opción "Instalar".
+Abre un nuevo proyecto en el Arduino IDE y selecciona la placa Arduino que estás utilizando.
+Ve a "Programar" > "Incluir Biblioteca" > "Arduino IoT Cloud" y selecciona tu dispositivo en "Dispositivo Arduino".
+Pega la clave de autenticación que copiaste en el paso 2 en el código Arduino.
+
+> Desde el IDE remoto
+
+![cloud](./arduino_cloud.png)
+
+Adicionalmente es posible trabajar directamente desde el sitio ingresando en la opción **sketch**. Actualmente la plataforma tiene una vista de desarrollo completa muy similar al entorno Arduino IDE de escritorio pero para poder utilizarlo correctamente es necesario instalar un pluggin que la propia plataforma sugiere descargar cuando se selecciona esta vista de desarrollo. Algo interesante es notar que el proyecto que genera la plataforma ya se encuentra divido en varios archivos incluidos un archivo de configuración y una librería propia para la declaración y variables y funciones auxiliares.
+
+#### Paso 4: Crear un Think (Lógica de Control)
+
+Desde el panel de control la opción **Thinks** permite crear** las cosas**. Tener presente que este término está vinculado con actuadores y sensores.
+Desde la opción "ADD" se crea y se asigna un nombre al nuevo objeto. Si el plan es free solo permite crear dos things como máximo. 
+Luego se configuran las reglas y acciones que se necesita que realice el dispositivo vinculado. Por ejemplo, se puede crear un think que encienda un LED cuando la temperatura supere cierto umbral. 
+
+Un concepto interesante en este paso es de **variables**. Las variables son las herramientas con las que es posible monitorear o controlar el thing desde el **dashboard**. Por ejemplo una variable de tipo bool que tome el valor desde un switch dibujado en el panel de control diseñado.
+
+#### Paso 5: Crear un Dashboard
+
+Para poder interactuar con los things creados en el paso anterior es necesario diseñar un panel (o dashboard). Un dashboard se personaliza mediante widgets como gráficos, botones (switch) o medidores que permiten mostrar los datos de los dispositivos y controlarlos. Luego se Asocian los things que se crearon en el paso 4 a los widgets del dashboard para controlar y mostrar los datos en tiempo real.
+
+#### Paso 6: Conectar y Monitorear tu Dispositivo
+
+Por último se sube el código Arduino al dispositivo siguiendo las instrucciones habituales del Arduino IDE.
+Una vez que el dispositivo está en línea, se podrá monitorear y controlar su funcionamiento desde el dashboard que se creó en el paso 5.
+
+También es posible utilizar una app para dispositivos móviles que puede desacargase de las tiendas habituales. Mediante estas app se trabaja con los dashboard diseñado de la misma manera que se haría desde el entorno de trabajo ofrecio por el sitio Web de la plataforma.
+
+Para más detalle se sugiere el siguiente [video](https://www.youtube.com/watch?v=ybZDmEITIyE).
+
+
+## Ejercitación 
+
+Caso Práctico 13:
+Se sugiere diseñar la misma estación meteorológica desarrollada mediante ThingSpeak pero esta vez usando Arduino Cloud. 
