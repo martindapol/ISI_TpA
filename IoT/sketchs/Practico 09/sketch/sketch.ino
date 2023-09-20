@@ -2,14 +2,14 @@
 
 WiFiServer server(80);
 
-const char* ssid = "UTNFRC";
-const char* password = "";
+const char* ssid = "ALTOHARD-POLL";
+const char* password = "XXXXXXX";
 
 String header;  // Variable para guardar el HTTP request
-const int PIN_RELAY = 26;
+const int PIN_LED = 23;
 
 //------------------------CODIGO HTML------------------------------
-String pagina = "<!DOCTYPE html>"
+String pagina = F("<!DOCTYPE html>"
                 "<html>"
                 "<head>"
                 "<meta charset='utf-8' />"
@@ -22,15 +22,15 @@ String pagina = "<!DOCTYPE html>"
                 "<p><a href='/off'><button style='height:50px;width:100px;color:red'>OFF</button></a></p>"
                 "</center>"
                 "</body>"
-                "</html>";
+                "</html>");
 
 
 void setup() {
   Serial.begin(9600);
   Serial.println("");
 
-  pinMode(PIN_RELAY, OUTPUT);
-  digitalWrite(PIN_RELAY, LOW);
+  pinMode(PIN_LED, OUTPUT);
+  digitalWrite(PIN_LED, LOW);
 
   // Conexión WIFI
   WiFi.begin(ssid, password);
@@ -64,9 +64,9 @@ void loop() {
 
             // enciende y apaga el GPIO
             if (header.indexOf("GET /on") >= 0) {
-              digitalWrite(PIN_RELAY, HIGH);
+              digitalWrite(PIN_LED, HIGH);
             } else if (header.indexOf("GET /off") >= 0) {
-              digitalWrite(PIN_RELAY, LOW);
+              digitalWrite(PIN_LED, LOW);
             }
 
             // Muestra la página web
@@ -86,5 +86,6 @@ void loop() {
     header = "";
     // Cerramos la conexión
     client.stop();
+     
   }
 }
